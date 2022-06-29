@@ -17,19 +17,68 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from tensorflow.keras.callbacks import EarlyStopping, TensorBoard
 import datetime, os
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 #read data from csv
 file_path= r"C:\Users\sabri\Documents\PYTHON\DL\Datasets\heart.csv"
 heart_data= pd.read_csv(file_path, sep=',', header= 0 )
 #%%
-#View teh first 5 data
+#View the first 5 data
 heart_data.head()
-
+#%%
+#View the data info of each column
+heart_data.info()
 #%%
 #Check null in all column
 print(heart_data.isna().sum())
-
+# no null data found
 #DATA CLEANING IS DONE
+
+#%%
+#DATA ANALYSIS
+heart_data.describe()
+
+#%%
+#Correlation between each feature
+plt.figure(figsize= (15,8))
+sns.heatmap(heart_data.corr(), annot= True, cmap= None)
+
+#%%
+#See at which age has the most
+plt.figure(figsize= (15,8))
+sns.countplot(x= heart_data['age'])
+#%%
+#The count in the target, 0- no heart disease, 1- has heart disease
+sns.countplot(x='target', data= heart_data)
+#%%
+#Count in female and male
+sns.countplot(x='sex', data= heart_data)
+#%%
+#age
+sns.distplot(heart_data['age'],color ='red',bins=20)
+#%%
+#thalach
+sns.distplot(heart_data['thalach'],color ='red',bins=20)
+#%%
+#chol
+sns.distplot(heart_data['chol'],color ='red',bins=20)
+#%%
+#Remove outliner
+plt.figure(figsize=(15,5))
+sns.boxplot(data=heart_data,orient='h')
+#%%
+#Drop the duplicate
+duplicate_heart_data = heart_data.drop_duplicates()
+
+heart_data.shape #(1025,14)
+duplicate_heart_data.shape#(302, 14)
+#%%
+duplicate_heart_data.describe
+#%%
+plt.figure(figsize= (15,8))
+sns.heatmap(duplicate_heart_data.corr(), annot= True, cmap= None)
+
 #%%
 #DATA PREPROCESSING
 #5. Split into features and labels
@@ -77,18 +126,81 @@ model.summary()
 
 #%%
 
-#9. Compile and train the model
+#Compile and train the model
 base_log_path = r"C:\Users\sabri\Documents\PYTHON\DL\TensorBoard\tb_logs"
 log_path = os.path.join(base_log_path, datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+ '___Project1')
+#Use early stopping to avoid overfit
 es= EarlyStopping(monitor='val_loss',patience=10)
 tb = TensorBoard(log_dir=log_path)
 
+#Use optimizer= adams, loss= BinaryCrossEntropy accuracy= Binary accuracy
 optimizers= optimizers.Adam(learning_rate= 0.0001)
 loss= losses.BinaryCrossentropy(from_logits= False)
 accuracy= metrics.BinaryAccuracy()
 
 model.compile(optimizer=optimizers ,loss= loss ,metrics= accuracy)
-history = model.fit(x_train,y_train,validation_data=(x_test,y_test),batch_size=32,epochs=1000, callbacks=[tb, es])
+history = model.fit(x_train,y_train,validation_data=(x_test,y_test),batch_size=32,epochs=100, callbacks=[tb, es])
+
+#%%
+#Predict x test
+predicted= model.predict(x_test)
+
+#%%
+#Make the comparison between predicted and actual
+pd.DataFrame(np.c_[y_test,predicted],columns=['Actual','Predicted']).head(7)
+
+
+#%%
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+#%%
+# accuracy test on tran and test data, confusiin matrix and clasisfication report
+def print_scores(clf, X_train, y_train, X_test, y_test, train=True):
+    if train:
+        pred= clf.predict(X_train)
+        clf_report = classification_report(y_train, pred)
+        print("Train Report: \n=============================================")
+        print(f"Accuracy: {accuracy_score(y_train, pred)*100:.2f}%")
+        print("_______________________________________________")
+        print(f"Classification report: \n{clf_report}")
+        print("_______________________________________________")
+        print(f"Confusion Matrix: \n{confusion_matrix(y_train, pred)}\n\n\n\n")
+        
+    
+    elif train==False:
+        pred= clf.predict(X_test)
+        clf_report = classification_report(y_test, pred)
+        print("Test Report: \n=============================================")
+        print(f"Accuracy: {accuracy_score(y_test, pred)*100:.2f}%")
+        print("_______________________________________________")
+        print(f"Classification report: \n{clf_report}")
+        print("_______________________________________________")
+        print(f"Confusion Matrix: \n{confusion_matrix(y_test, pred)}\n\n\n\n")
+        
+#%%
+#Use Linear Regression
+from sklearn.linear_model import LogisticRegression
+
+lr_clf = LogisticRegression().fit(x_train,y_train)
+
+
+print_scores(lr_clf, x_train, y_train, x_test, y_test, train=True)
+print_scores(lr_clf, x_train, y_train, x_test, y_test, train=False)
+
+#%%
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
