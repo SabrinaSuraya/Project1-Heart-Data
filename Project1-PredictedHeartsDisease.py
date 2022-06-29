@@ -147,63 +147,20 @@ predicted= model.predict(x_test)
 
 #%%
 #Make the comparison between predicted and actual
-pd.DataFrame(np.c_[y_test,predicted],columns=['Actual','Predicted']).head(7)
+pd.DataFrame(np.c_[y_test,predicted],columns=['Actual','Predicted']).head(5)
 
 
 #%%
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 #%%
-# accuracy test on tran and test data, confusiin matrix and clasisfication report
-def print_scores(clf, X_train, y_train, X_test, y_test, train=True):
-    if train:
-        pred= clf.predict(X_train)
-        clf_report = classification_report(y_train, pred)
-        print("Train Report: \n=============================================")
-        print(f"Accuracy: {accuracy_score(y_train, pred)*100:.2f}%")
-        print("_______________________________________________")
-        print(f"Classification report: \n{clf_report}")
-        print("_______________________________________________")
-        print(f"Confusion Matrix: \n{confusion_matrix(y_train, pred)}\n\n\n\n")
-        
-    
-    elif train==False:
-        pred= clf.predict(X_test)
-        clf_report = classification_report(y_test, pred)
-        print("Test Report: \n=============================================")
-        print(f"Accuracy: {accuracy_score(y_test, pred)*100:.2f}%")
-        print("_______________________________________________")
-        print(f"Classification report: \n{clf_report}")
-        print("_______________________________________________")
-        print(f"Confusion Matrix: \n{confusion_matrix(y_test, pred)}\n\n\n\n")
-        
-#%%
-#Use Linear Regression
-from sklearn.linear_model import LogisticRegression
-
-lr_clf = LogisticRegression().fit(x_train,y_train)
-
-
-print_scores(lr_clf, x_train, y_train, x_test, y_test, train=True)
-print_scores(lr_clf, x_train, y_train, x_test, y_test, train=False)
+#Evaluate model with test data
+train_loss, train_acc= model.evaluate(x_train, y_train, verbose=2 )
+test_loss, test_acc= model.evaluate(x_test, y_test, verbose=2 )
 
 #%%
+#Classification report
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#classification_report_model= classification_report(y_test, predictions)
+#%%
 
