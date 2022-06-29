@@ -41,15 +41,15 @@ Heart Disease Prediction
 
 ![image](https://user-images.githubusercontent.com/73817610/176481648-1ae1dbf2-1e98-4ee9-9932-24de800890f3.png)
 
-- histogram of age
+- density plot of age
 
 ![image](https://user-images.githubusercontent.com/73817610/176481772-f07a20de-4a90-4d51-bfef-d5f5a28c7f41.png)
 
-- histogram of thalach
+- density plot of thalach
 
 ![image](https://user-images.githubusercontent.com/73817610/176481856-9a810639-03b5-4d85-ab3c-24ccca888c43.png)
 
-- histogram of chol
+- density plot of chol
 
 ![image](https://user-images.githubusercontent.com/73817610/176481926-cdde6ad4-d8f1-469d-9a91-e831938268bc.png)
 
