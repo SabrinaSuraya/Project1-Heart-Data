@@ -73,6 +73,14 @@ use train test split
 
 ![image](https://user-images.githubusercontent.com/73817610/174966190-0047117c-5bb8-4079-9b0a-cafb5e0093d9.png)
 
+# Evaluate Data
+
+![image](https://user-images.githubusercontent.com/73817610/176488656-c869c321-6ede-4d6d-948a-138f2236aa72.png)
+
+the top is for training and the bottom for test
+- we can see that the model has 100% accuracy and almost 0 loss. The model is good and no need modifictaions
+
+
 # Test Data
 - make predictions
 - make prediction on the first 5 test data
